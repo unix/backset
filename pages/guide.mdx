@@ -1,0 +1,130 @@
+import Layout from 'lib/components/layout'
+import NextLink from 'next/link'
+import { Note, Spacer, Link, Tabs, Snippet, Display } from '@zeit-ui/react'
+
+export const meta = {
+  title: 'Guide',
+}
+
+### Install
+
+Ensure your have the latest version of NodeJS, and a package manager: <Link target="_blank" href="https://www.npmjs.com/">NPM</Link> or <Link target="_blank" href="https://classic.yarnpkg.com/en/docs/install#mac-stable">Yarn</Link>,
+and run the command to install the package:
+
+<Spacer />
+
+<Tabs initialValue="yarn" hideDivider>
+  <Tabs.Item label="Yarn" value="yarn">
+    <Snippet text="yarn add backset" width="350px" />
+  </Tabs.Item>
+  <Tabs.Item label="NPM" value="npm">
+    <Snippet text="npm i backset" width="350px" />
+  </Tabs.Item>
+</Tabs>
+
+<Spacer y={3} />
+
+### Primary
+
+The most common usage scenario of `backset` is that different levels of components share datas.
+For example, the `Page` component is nested with the `User` component:
+
+<Display caption="The two simplest components we have." width="500px">
+
+```jsx
+const Page = () => (
+  <div>
+    <User />
+    <button>Login</button>
+  </div>
+)
+
+const User = () => {
+  const username = 'witt'
+  return <span>{username}</span>
+}
+```
+
+</Display>
+
+Of course, your components must be much more complex than them, but our goals are the same,
+**changing the value of one component from another**.
+
+Now we just need to create the `initialValue`, and link the **Parent Component** to the context:
+
+```jsx
+// user.state.js
+import Backset from 'backset'
+
+export default Backset.create({
+  username: 'Anonymous',
+})
+```
+
+```jsx
+// Page component
+import { withContext, useUpdates } from './user.state.js'
+const Page = () => {
+  const updates = useUpdates()
+  return (
+    <div>
+      <User />
+      <button onClick={() => updates.username('witt')}>Login</button>
+    </div>
+  )
+}
+
+export default withContext(Page)
+```
+
+`Backset.create` will create a `Context`, and it will automatically set the initial value of the context, update functions, types, etc.
+You can use `withContext` on any components, which immediately links the component and all sub-components in to this context.
+
+Now we've done these things:
+
+- Provides `initialValue` for component first rendering.
+- Update value when `Button` is clicked.
+- `Page` and its sub-components are in `Context`.(Automatically)
+
+In the `User` component, we try to use these values:
+
+```jsx
+// user.jsx
+import { useStores } from './user.state.js'
+
+const User = () => {
+  const { username } = useStores()
+  return <span>{username}</span>
+}
+```
+
+That's all, no code for template, no reducers, no `switch`...
+You can edit this example on <Link target="_blank" color href="#">Online Editor</Link>.
+
+<Spacer y={3} />
+
+### Tracked
+
+We know that when using `React.Context`, you can eliminate unnecessary updatesin two ways:
+
+- Wrap your component with `React.memo`.
+- Wrap render function with `React.useMemo`.
+
+`Backset` offers an easier way to eliminate unnecessary re-renders in `Context`,
+you don't need to do anything extra, with `useTracked`, it will only update what you want:
+
+```jsx
+const { useTracked } = Backset.create({ title: 'hello_world', ... })
+
+const Banner = () => {
+  const { title } = useTracked(['title'])
+  return <span>{title}</span>
+}
+```
+
+Now any data update other than `title` will not cause `Banner` component to re-render.
+In other words, the `Banner` component only tracks udpates to the `title` property.
+
+You can try it in this <Link color>online example</Link>.
+
+export default ({ children }) => <Layout meta={meta}>{children}</Layout>

@@ -1,0 +1,168 @@
+import Layout from 'lib/components/layout'
+import NextLink from 'next/link'
+import { Spacer, Tooltip, Code, Card, Grid } from '@zeit-ui/react'
+
+export const meta = {
+  title: 'APIs',
+}
+
+### APIs
+
+**Module**
+
+```ts
+import Backset from 'backset'
+
+const { create, useStateRef } = Backset
+```
+
+- `create(initialValue: object) => State`: Create a `Backset` instance.
+  - (params)`initialValue`: Object. initial value of state. It is recommended to always set.
+- `useStateRef`: Utility function. Create a traceable state value.
+
+<Spacer />
+
+**State Instance**
+
+The `create` function return a state instance:
+
+```ts
+const backset = Backset.create<T>({})
+```
+
+export const CodeExample = ({ children }) => (
+  <div className="example">
+    <Grid.Container>
+      <Grid xs={24} sm={14}>
+        <Card>{children}</Card>
+      </Grid>
+    </Grid.Container>
+    <style jsx>{`
+      .example {
+        padding-left: 1.7rem;
+      }
+      .example :global(pre) {
+        border: none;
+      }
+      .example :global(.content) {
+        padding: 0;
+      }
+    `}</style>
+  </div>
+)
+
+```ts
+const { Provider, withContext, useStores, useUpdates, useCurrentRefs } = Backset.create<T>({})
+```
+
+- `useStores: () => Context<T>`: Get all values in the Context.
+
+  - (return)`Context<T>`: An object, value is determined by the `initialValue` created.
+
+<CodeExample>
+
+```tsx
+const App = () => {
+  const { myValue } = useStores()
+  return <span>{myValue}</span>
+}
+```
+
+</CodeExample>
+
+<Spacer />
+
+- `useUpdates: () => UpdateActions`: Get all update handles for values.
+
+  - (return)`UpdateActions: { [key: string]: Dispatch }`: An object, each value is an update function.
+
+<CodeExample>
+
+```tsx
+const App = () => {
+  const { myValue } = useUpdates()
+  return <button onClick={() => myValue('next')}>update</button>
+}
+```
+
+</CodeExample>
+
+<Spacer />
+
+- `useCurrentRefs: () => StateRefs`: Get all refs for values.
+
+  - (return)`StateRefs: MutableRefObject<T>`: Return a `Ref` instance, contains the current value of State.
+    It's always up-to-date, even in async functions.
+
+<CodeExample>
+
+```tsx
+const App = () => {
+  const ref = useCurrentRefs()
+  console.log(ref.current.myValue)
+  return null
+}
+```
+
+</CodeExample>
+
+<Spacer />
+
+- `withContext: (component: React.ComponentType) => React.ComponentType`: HOC component, used to link components to context.
+
+  - (params)`component: React.ComponentType`: Parameter is any react component. Usually a React FC component.
+  - (return): Return to a linked component.
+
+<CodeExample>
+
+```tsx
+const { withContext } = Backset.create({ myValue: '' })
+const App = () => <span />
+export default withContext(App)
+```
+
+</CodeExample>
+
+<Spacer />
+
+- `Provider: Context.Provider`: Provider component of ReactContext. Usually you don't need to use it directly.
+
+<CodeExample>
+
+```tsx
+const { Provider } = Backset.create({ myValue: '' })
+const App = () => (
+  <Provider>
+    <span />
+  </Provider>
+)
+export default App
+```
+
+</CodeExample>
+
+<Spacer />
+
+**Utils**
+
+```ts
+import { useStateRef } from 'backset'
+```
+
+- `useStateRef: (initial: S | (() => S)) => CurrentStateType<S>`: Get the latest value in functional component. By default, state in a React FC can only get the value at render time, not the latest.
+
+  - (params) `initial: S | (() => S)`: An object or function, same as `React.useState`.
+  - (return) `CurrentStateType<S> = [S, Dispatch, MutableRefObject<S>]`: Return state, dispatch function, ref function.
+
+<CodeExample>
+
+```tsx
+const App = () => {
+  const [state, setState, stateRef] = useStateRef('hello_world')
+  return <span></span>
+}
+```
+
+</CodeExample>
+
+export default ({ children }) => <Layout meta={meta}>{children}</Layout>
