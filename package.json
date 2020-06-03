@@ -19,12 +19,12 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "docs-build": "next build",
     "lint": "eslint \"{packages,lib}/**/*.{js,ts,tsx}\"",
     "test": "jest --config .jest.config.js --no-cache",
     "test-update": "jest --config .jest.config.js --no-cache --update-snapshot",
     "clear": "rm -rf dist",
     "prettier": "prettier --write .",
+    "now-build": "next build",
     "build": "yarn clear && rollup -c && tsc -p ./scripts",
     "release": "yarn build && yarn publish --non-interactive"
   },

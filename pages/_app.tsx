@@ -22,6 +22,13 @@ const Application: NextPage<AppProps<{}>> = ({ Component, pageProps }) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="description" content="Minimalist state tool for React apps." />
         <meta property="og:description" content="Minimalist state tool for React apps." />
+        <meta property="og:image" content="https://backset.now.sh/assets/og-main.png" />
+        <meta property="twitter:image" content="https://backset.now.sh/assets/og-main.png" />
+        <meta
+          itemProp="image"
+          property="og:image"
+          content="https://backset.now.sh/assets/og-main.png"
+        />
         <meta
           name="viewport"
           content="initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover"
