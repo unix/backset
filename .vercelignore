@@ -1,0 +1,4 @@
+.circleci
+dist
+examples
+tests
