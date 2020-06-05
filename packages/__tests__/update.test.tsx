@@ -64,4 +64,51 @@ describe('update', () => {
 
     expect(() => wrapper.unmount()).not.toThrow()
   })
+
+  it('components should be treacked', () => {
+    let renderCount = 0
+    const { withContext, useTracked, useUpdates } = Backset.create({
+      test: 'value1',
+      other: 0,
+    })
+    const MockComponent1 = () => {
+      const { test, other } = useUpdates()
+      return (
+        <div>
+          <button onClick={e => test((e.target as any).value)} id="btn" />
+          <button onClick={() => other(last => last + 1)} id="other" />
+        </div>
+      )
+    }
+    const MockComponent2 = () => {
+      const { test } = useTracked(['test'])
+      useEffect(() => {
+        renderCount++
+      })
+      return <span id="value">{test}</span>
+    }
+    const MockWrapper = withContext(() => {
+      return (
+        <div>
+          <MockComponent1 />
+          <MockComponent2 />
+        </div>
+      )
+    })
+    const wrapper = mount(<MockWrapper />)
+    expect(wrapper.find('#value').text()).toEqual('value1')
+    expect(renderCount).toBe(1)
+
+    const btn = wrapper.find('#btn')
+    simulateClick(btn, 'value2')
+    expect(wrapper.find('#value').text()).toEqual('value2')
+    expect(renderCount).toBe(2)
+
+    const otherButton = wrapper.find('#other')
+    simulateClick(otherButton, '')
+    simulateClick(otherButton, '')
+    simulateClick(otherButton, '')
+    expect(wrapper.find('#value').text()).toEqual('value2')
+    expect(renderCount).toBe(2)
+  })
 })
