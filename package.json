@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "browser": "dist/index.min.js",
+  "types": "dist/index.d.ts",
   "description": "Minimalist state tool for React apps.",
   "author": "unix <unix.bio@gmail.com>",
   "license": "MIT",

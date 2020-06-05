@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "../",
+    "baseUrl": "./",
     "outDir": "../dist",
     "declaration": true,
     "emitDeclarationOnly": true,
@@ -23,7 +23,8 @@
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "types" : ["react", "node"]
   },
   "files": [
     "../packages/index.ts"
