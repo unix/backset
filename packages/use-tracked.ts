@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { ContextableStates } from 'packages/create'
+import useStateRef from './use-state-ref'
+import { ContextableStates } from './create'
 
 const pickTrackedValues = <T extends ContextableStates>(values: T, keys: Array<keyof T>) => {
   return Object.keys(values).reduce((pre, key) => {
@@ -13,16 +13,15 @@ const pickTrackedValues = <T extends ContextableStates>(values: T, keys: Array<k
 
 const makeUseTracked = <T extends ContextableStates>(initialValues: T, eventName: string) => {
   return (trackingKeys: Array<keyof T>) => {
-    const [selected, setSelected] = useState<{ [key in typeof trackingKeys[number]]: T[key] }>(() =>
-      pickTrackedValues(initialValues, trackingKeys),
-    )
+    const [selected, setSelected, selectedRef] = useStateRef<
+      { [key in typeof trackingKeys[number]]: T[key] }
+    >(() => pickTrackedValues(initialValues, trackingKeys))
 
     if (typeof window !== 'undefined') {
       window.addEventListener(eventName, (event: CustomEvent<T>) => {
         const nextValue = event.detail
-        const hasChanged = trackingKeys.some(key => {
-          return selected[key] !== nextValue[key]
-        })
+
+        const hasChanged = trackingKeys.some(key => selectedRef.current[key] !== nextValue[key])
         if (hasChanged) {
           setSelected(pickTrackedValues(nextValue, trackingKeys))
         }
