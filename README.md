@@ -73,6 +73,7 @@ Using `backset` in your project is definitely a pleasure!
 <img align="center" width="620" src="https://user-images.githubusercontent.com/11304944/83866702-c4de0000-a75a-11ea-947f-0da90e88751c.png">
 </p>
 
+<br />
 
 ### Quick start
 
