@@ -11,8 +11,8 @@ module.exports = {
     '^.+\\.tsx?$': ['babel-jest', { configFile: './tests/.babelrc.js' }],
   },
 
-  // testRegex: '.*\\.test\\.(j|t)sx?$',
-  testRegex: '.*update\\.test\\.(j|t)sx?$',
+  testRegex: '.*\\.test\\.(j|t)sx?$',
+  // testRegex: '.*update\\.test\\.(j|t)sx?$',
 
   collectCoverageFrom: ['packages/**/*.{ts,tsx}'],
 
